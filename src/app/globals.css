@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+
+:root {
+  /* Base Colors */
+  --background: 220 14% 96%;
+  --foreground: 220 39% 11%;
+
+}
+
+/* Dark Mode */
+.dark {
+  --background: 220 39% 11%;
+  --foreground: 220 14% 96%;
+  
+}
+
+/* Custom Utilities */
+
+@layer utilities{
+  .heading{
+
+  }
+
+  .logo{
+
+  }
+
+  .primary-btn{
+
+  }
+
+  .secondary-btn{
+
+  }
+  
+}
