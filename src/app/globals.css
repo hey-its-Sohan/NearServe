@@ -1,37 +1,130 @@
 @import "tailwindcss";
 
+@theme {
+  /* Background & Text Colors */
+  --color-background: rgb(249 250 251);
+  --color-foreground: rgb(17 24 39);
 
-:root {
-  /* Base Colors */
-  --background: 220 14% 96%;
-  --foreground: 220 39% 11%;
+  /* Primary Colors (Emerald Green) */
+  --color-primary: rgb(34 197 94);
+  --color-primary-foreground: rgb(255 255 255);
+  --color-primary-hover: rgb(21 128 61); /* emerald-700 */
 
+  /* Secondary Colors (Sky Blue) */
+  --color-secondary: rgb(14 165 233);
+  --color-secondary-foreground: rgb(255 255 255);
+  --color-secondary-hover: rgb(2 132 199); /* sky-600 */
+
+  /* Accent Colors (Amber) */
+  --color-accent: rgb(245 158 11);
+  --color-accent-foreground: rgb(255 255 255);
+  --color-accent-hover: rgb(217 119 6); /* amber-600 */
+
+  /* Neutral/Dark Colors */
+  --color-neutral: rgb(17 24 39);
+  --color-neutral-foreground: rgb(255 255 255);
+
+  /* Status Colors */
+  --color-success: rgb(34 197 94);
+  --color-warning: rgb(245 158 11);
+  --color-error: rgb(239 68 68);
+  --color-info: rgb(14 165 233);
+
+  /* Gradient color */
+  --gradient-hero: linear-gradient(135deg, rgb(34 197 94), rgb(14 165 233));
+
+  /* Muted Colors */
+  --color-muted: rgb(243 244 246);
+  --color-muted-foreground: rgb(107 114 128);
+
+  /* Border & Input */
+  --color-border: rgb(229 231 235);
+  --color-input: rgb(229 231 235);
+  --color-ring: rgb(34 197 94); /* Primary color */
+
+  /* Card Colors */
+  --color-card: rgb(255 255 255);
+  --color-card-foreground: rgb(17 24 39);
+
+  /* Popover Colors */
+  --color-popover: rgb(255 255 255);
+  --color-popover-foreground: rgb(17 24 39);
 }
 
 /* Dark Mode */
 .dark {
-  --background: 220 39% 11%;
-  --foreground: 220 14% 96%;
-  
-}
+  --color-background: rgb(17 24 39);
+  --color-foreground: rgb(249 250 251);
 
+  --color-primary: rgb(34 197 94);
+  --color-primary-foreground: rgb(255 255 255);
+  --color-primary-hover: rgb(22 163 74);
+
+  --color-secondary: rgb(14 165 233);
+  --color-secondary-foreground: rgb(255 255 255);
+  --color-secondary-hover: rgb(2 132 199);
+
+  --color-accent: rgb(245 158 11);
+  --color-accent-foreground: rgb(255 255 255);
+  --color-accent-hover: rgb(217 119 6);
+
+  --color-neutral: rgb(31 41 55);
+  --color-neutral-foreground: rgb(255 255 255);
+
+  --color-muted: rgb(55 65 81);
+  --color-muted-foreground: rgb(156 163 175);
+
+  --color-border: rgb(55 65 81);
+  --color-input: rgb(55 65 81);
+  --color-ring: rgb(34 197 94);
+
+  --color-card: rgb(31 41 55);
+  --color-card-foreground: rgb(249 250 251);
+
+  --color-popover: rgb(31 41 55);
+  --color-popover-foreground: rgb(249 250 251);
+}
 /* Custom Utilities */
 
-@layer utilities{
-  .heading{
-
+@layer utilities {
+  .bg-hero {
+    background: var(--gradient-hero);
   }
 
-  .logo{
-
+  .title {
+    @apply text-4xl lg:text-6xl font-bold;
   }
 
-  .primary-btn{
-
+  .heading {
+    @apply text-3xl font-bold mb-3;
   }
 
-  .secondary-btn{
-
+  .fix-alignment {
+    @apply max-w-screen-xl mx-auto px-5 lg:px-0;
   }
-  
+
+  .text-gray {
+    @apply text-muted-foreground;
+  }
+
+  .text-gradient {
+    background: var(--gradient-hero);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .card-animate {
+    @apply transition-all duration-300 hover:-translate-y-1;
+  }
+
+  .logo {
+  }
+
+  .primary-btn {
+  }
+
+  .secondary-btn {
+  }
 }
