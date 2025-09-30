@@ -13,31 +13,46 @@ const BrowseByCategories = () => {
       icon: <BrushCleaning className="w-8 h-8" />,
       title: "Cleaning",
       count: "150+",
+      color: "primary"
     },
     {
       icon: <ToolCase className="w-8 h-8" />,
       title: "Repair",
       count: "200+",
+      color: "secondary"
     },
     {
       icon: <GraduationCap className="w-8 h-8" />,
       title: "Tutoring",
       count: "80+",
+      color: "accent"
     },
     {
       icon: <PawPrint className="w-8 h-8" />,
       title: "Pet Care",
       count: "20+",
+      color: "primary"
     },
     {
       icon: <Camera className="w-8 h-8" />,
       title: "Photography",
       count: "90+",
+      color: "secondary"
     },
   ];
+
+  const getStepColor = (color: string) => {
+    const colors = {
+      primary: "bg-primary/10 text-primary border-primary/20",
+      secondary: "bg-secondary/10 text-secondary border-secondary/20",
+      accent: "bg-accent/10 text-accent border-accent/20"
+    };
+    return colors[color as keyof typeof colors] || colors.primary;
+  };
+  
   return (
     <section className="bg-slate-100 py-20">
-      <div className="fix-alignment">
+      <div className="fix-alignment text-center">
         <h1 className="heading">Browse By Category</h1>
         <p className="text-gray text-xl mb-7">
           Explore our most popular service categories.
@@ -47,9 +62,9 @@ const BrowseByCategories = () => {
           {services.map((service, index) => (
             <div
               key={index}
-              className="p-5 cursor-pointer text-center bg-white rounded-xl card-animate shadow-md"
+              className="group text-center card-animate "
             >
-              <div className="text-secondary flex justify-center">
+              <div className={`w-16 h-16 rounded-2xl ${getStepColor(service.color)} flex items-center mx-auto border justify-center group-hover:scale-110 transition-transform duration-300`}>
                 {service.icon}
               </div>
 
