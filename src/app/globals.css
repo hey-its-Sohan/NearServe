@@ -1,0 +1,179 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  /* Background & Text Colors */
+  --color-background: rgb(249 250 251);
+  --color-foreground: rgb(17 24 39);
+
+  /* Primary Colors (Emerald Green) */
+  --color-primary: rgb(34 197 94);
+  --color-primary-foreground: rgb(255 255 255);
+  --color-primary-hover: rgb(21 128 61); /* emerald-700 */
+
+  /* Secondary Colors (Sky Blue) */
+  --color-secondary: rgb(14 165 233);
+  --color-secondary-foreground: rgb(255 255 255);
+  --color-secondary-hover: rgb(2 132 199); /* sky-600 */
+
+  /* Accent Colors (Amber) */
+  --color-accent: rgb(245 158 11);
+  --color-accent-foreground: rgb(255 255 255);
+  --color-accent-hover: rgb(217 119 6); /* amber-600 */
+
+  /* Neutral/Dark Colors */
+  --color-neutral: rgb(17 24 39);
+  --color-neutral-foreground: rgb(255 255 255);
+
+  /* Status Colors */
+  --color-success: rgb(34 197 94);
+  --color-warning: rgb(245 158 11);
+  --color-error: rgb(239 68 68);
+  --color-info: rgb(14 165 233);
+
+  /* Gradient color */
+  --gradient-hero: linear-gradient(135deg, rgb(34 197 94), rgb(14 165 233));
+
+  /* Muted Colors */
+  --color-muted: rgb(243 244 246);
+  --color-muted-foreground: rgb(107 114 128);
+
+  /* Border & Input */
+  --color-border: rgb(229 231 235);
+  --color-input: rgb(229 231 235);
+  --color-ring: rgb(34 197 94); /* Primary color */
+
+  /* Card Colors */
+  --color-card: rgb(255 255 255);
+  --color-card-foreground: rgb(17 24 39);
+
+  /* Popover Colors */
+  --color-popover: rgb(255 255 255);
+  --color-popover-foreground: rgb(17 24 39);
+}
+
+/* Dark Mode */
+.dark {
+  --color-background: rgb(17 24 39);
+  --color-foreground: rgb(249 250 251);
+
+  --color-primary: rgb(34 197 94);
+  --color-primary-foreground: rgb(255 255 255);
+  --color-primary-hover: rgb(22 163 74);
+
+  --color-secondary: rgb(14 165 233);
+  --color-secondary-foreground: rgb(255 255 255);
+  --color-secondary-hover: rgb(2 132 199);
+
+  --color-accent: rgb(245 158 11);
+  --color-accent-foreground: rgb(255 255 255);
+  --color-accent-hover: rgb(217 119 6);
+
+  --color-neutral: rgb(31 41 55);
+  --color-neutral-foreground: rgb(255 255 255);
+
+  --color-muted: rgb(55 65 81);
+  --color-muted-foreground: rgb(156 163 175);
+
+  --color-border: rgb(55 65 81);
+  --color-input: rgb(55 65 81);
+  --color-ring: rgb(34 197 94);
+
+  --color-card: rgb(31 41 55);
+  --color-card-foreground: rgb(249 250 251);
+
+  --color-popover: rgb(31 41 55);
+  --color-popover-foreground: rgb(249 250 251);
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+/* Custom Utilities */
+
+@layer components{
+
+@layer utilities {
+
+  /* for gradient background */
+  .bg-gradient {           
+    background: var(--gradient-hero);
+  }
+
+  /* hero title */
+  .title {
+    @apply text-4xl lg:text-6xl font-bold;
+  }
+
+  /* All heading for a section */
+  .heading {
+    @apply text-3xl font-bold mb-3;
+  }
+
+  /* For consistent alignment and gaps for all section */
+  .fix-alignment {
+    @apply max-w-screen-xl mx-auto px-5 lg:px-0;
+  }
+
+  /* for gray color texts */
+  .text-gray {
+    @apply text-muted-foreground;
+  }
+
+  /* gradient color texts */
+  .text-gradient {
+    background: var(--gradient-hero);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Card animation and design */
+  .card-animate {
+    @apply bg-card cursor-pointer hover:-translate-y-1 border border-border rounded-xl p-6 h-full hover:shadow-lg hover:border-primary/30 transition-all duration-300;
+  }
+
+  .logo {
+  }
+
+   .primary-btn {
+    @apply inline-flex cursor-pointer items-center justify-center px-6 py-3 font-semibold rounded-lg text-white transition-all duration-200 hover:opacity-80 shadow-md hover:shadow-lg;
+    background: var(--gradient-hero);
+  }
+}
+
+  .secondary-btn {
+    @apply inline-flex items-center justify-center px-6 py-3 font-semibold rounded-lg  transition-all duration-200 cursor-pointer border-accent/40 text-accent border hover:bg-accent hover:text-white shadow-md hover:shadow-lg
+  }
+}
+
