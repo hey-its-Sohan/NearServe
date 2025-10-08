@@ -21,7 +21,7 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="w-full border-b border-border bg-white/80 text-foreground sticky backdrop-blur top-0 z-50">
+        <nav className="w-full border-b border-border bg-background/80 text-foreground sticky backdrop-blur top-0 z-50">
             <div className="fix-alignment flex justify-between items-center py-3 md:py-4">
                 {/* === Left: Logo === */}
                 <div className="flex">

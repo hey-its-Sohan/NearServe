@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import Link from 'next/link';
 
 const AllServicesClient = ({ initialServices }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -53,7 +54,7 @@ const AllServicesClient = ({ initialServices }) => {
   };
 
   return (
-    <div className="min-h-screen bg-background py-20">
+    <div className="min-h-screen bg-background py-16">
       <div className="fix-alignment">
         {/* Header Section */}
         <div className="text-center max-w-3xl mx-auto mb-12">
@@ -220,17 +221,19 @@ const AllServicesClient = ({ initialServices }) => {
                 </CardContent>
 
                 <CardFooter>
-                  <Button className="w-full primary-btn group">
-                    View Details
-                    <svg
-                      className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </Button>
+                  <Link href={`allservices/${service._id}`}>
+                    <Button className="w-full primary-btn group">
+                      View Details
+                      <svg
+                        className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Button>
+                  </Link>
                 </CardFooter>
               </Card>
             ))}
