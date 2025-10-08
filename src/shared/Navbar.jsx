@@ -39,7 +39,7 @@ const Navbar = () => {
                     <Link href="/allservices" className="hover:text-primary transition-colors duration-200">
                         All Services
                     </Link>
-                    <Link href="/about" className="hover:text-primary transition-colors duration-200">
+                    <Link href="/AboutPage" className="hover:text-primary transition-colors duration-200">
                         About
                     </Link>
                     <Link href="/dashboard" className="hover:text-primary transition-colors duration-200">
