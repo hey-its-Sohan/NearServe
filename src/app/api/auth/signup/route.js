@@ -3,9 +3,9 @@ import bcrypt from "bcryptjs";
 
 export async function POST(req) {
   try {
-    const { name, email, password, role } = await req.json();
+    const { name, email, password, role, image } = await req.json();
     console.log(req);
-    if (!name || !email || !password || !role) {
+    if (!name || !email || !password || !role || !image) {
       return Response.json(
         { message: "All fields are required" },
         { status: 400 }
@@ -31,6 +31,7 @@ export async function POST(req) {
       email,
       password: hashedPassword,
       role,
+      image,
       createdAt: new Date(),
     });
 

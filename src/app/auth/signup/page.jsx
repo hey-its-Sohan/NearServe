@@ -106,6 +106,26 @@ export default function Signup() {
                 </p>
               )}
             </div>
+            {/* profile image */}
+            <div className="space-y-1.5">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Profile Picture
+              </label>
+              <input
+                id="img"
+                type="text"
+                placeholder="https://site.com/api/yourimg.png"
+                {...register("image", {
+                  required: "Profile Picture URL Required",
+                })}
+                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none text-sm"
+              />
+              {errors.img && (
+                <p className="text-sm text-red-500 mt-1">
+                  {errors.img.message}
+                </p>
+              )}
+            </div>
 
             {/* Password */}
             <div className="space-y-1.5">

@@ -16,6 +16,7 @@ export const SessionProviderCustom = ({ children }) => {
         name: session.user.name || "",
         email: session.user.email || "",
         role: session.user.role,
+        profileImg:session.user.image
       });
     } else {
       setUser(null);

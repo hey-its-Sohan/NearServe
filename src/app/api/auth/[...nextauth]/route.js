@@ -20,6 +20,14 @@ export const {
           response_type: "code",
         },
       },
+      profile(profile) {
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture,
+        };
+      },
     }),
     CredentialsProvider({
       name: "Credentials",
@@ -48,15 +56,17 @@ export const {
           email: user.email,
           role: user.role || "user",
           lastLogin: user.lastLogin || null,
+          image: user.image || "/default-profile.png", // fallback
         };
       },
     }),
   ],
 
-  pages: { signIn: "/signin" },
+  pages: {
+    signIn: "/signin",
+  },
 
   callbacks: {
-    // SignIn: update DB
     async signIn({ user, account }) {
       const client = await clientPromise;
       const db = client.db("NearServe");
@@ -65,6 +75,8 @@ export const {
         const existingUser = await db
           .collection("users")
           .findOne({ email: user.email });
+        const image = user.image || "/default-profile.png";
+
         if (existingUser) {
           await db.collection("users").updateOne(
             { email: user.email },
@@ -72,6 +84,7 @@ export const {
               $set: {
                 lastLogin: new Date(),
                 name: user.name,
+                image,
                 updatedAt: new Date(),
               },
             }
@@ -80,6 +93,7 @@ export const {
           await db.collection("users").insertOne({
             name: user.name || "",
             email: user.email,
+            image,
             role: "user",
             provider: "google",
             createdAt: new Date(),
@@ -105,37 +119,22 @@ export const {
       return true;
     },
 
-    // JWT: attach full user info
-    async jwt({ token, user, account }) {
-      const client = await clientPromise;
-      const db = client.db("NearServe");
-
+    async jwt({ token, user }) {
       if (user) {
-        // For Credentials login, user already has id, role, lastLogin
         token.id = user.id;
         token.role = user.role;
         token.lastLogin = user.lastLogin;
-      } else if (account?.provider === "google") {
-        // For Google login, fetch user from DB
-        const dbUser = await db
-          .collection("users")
-          .findOne({ email: token.email });
-        if (dbUser) {
-          token.id = dbUser._id.toString();
-          token.role = dbUser.role || "user";
-          token.lastLogin = dbUser.lastLogin || null;
-        }
+        token.image = user.image || "/default-profile.png";
       }
-
       return token;
     },
 
-    // Session: pass token data to client
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id;
         session.user.role = token.role;
         session.user.lastLogin = token.lastLogin;
+        session.user.image = token.image;
       }
       return session;
     },
