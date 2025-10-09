@@ -4,11 +4,13 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import logo from "../../public/logo.png";
 import Image from "next/image";
+import { useSessionData } from "@/app/context/SessionContext";
+import { signOut } from "next-auth/react";
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+const {user} = useSessionData();
 
     useEffect(() => {
         const user = localStorage.getItem("nearserve_user");
@@ -49,24 +51,24 @@ const Navbar = () => {
 
                 {/* === Right: Buttons (Hidden on Mobile) === */}
                 <div className="hidden md:flex items-center space-x-3 lg:space-x-5">
-                    {!isLoggedIn ? (
+                    {!user ? (
                         <>
-                            <button
-                                onClick={() => alert("Login Clicked!")}
+                            <Link
+                                href={'/auth/signin'}
                                 className="primary-btn text-sm md:text-base px-4 py-2"
                             >
                                 Login
-                            </button>
-                            <button
-                                onClick={() => alert("Register Clicked!")}
+                            </Link>
+                            <Link
+                                href={'/auth/signup'}
                                 className="secondary-btn text-sm md:text-base px-4 py-2"
                             >
                                 Register
-                            </button>
+                            </Link>
                         </>
                     ) : (
                         <button
-                            onClick={handleLogout}
+                            onClick={signOut}
                             className="secondary-btn text-sm md:text-base px-4 py-2"
                         >
                             Logout
