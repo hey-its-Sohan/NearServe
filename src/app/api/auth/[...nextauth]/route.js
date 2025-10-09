@@ -1,8 +1,8 @@
-import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import CredentialsProvider from "next-auth/providers/credentials";
+import clientPromise from "@/lib/dbConnect";
 import bcrypt from "bcryptjs";
-import clientPromise from "@/lib/mongodb";
+import NextAuth from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 
 export const {
   handlers: { GET, POST },
@@ -66,18 +66,16 @@ export const {
           .collection("users")
           .findOne({ email: user.email });
         if (existingUser) {
-          await db
-            .collection("users")
-            .updateOne(
-              { email: user.email },
-              {
-                $set: {
-                  lastLogin: new Date(),
-                  name: user.name,
-                  updatedAt: new Date(),
-                },
-              }
-            );
+          await db.collection("users").updateOne(
+            { email: user.email },
+            {
+              $set: {
+                lastLogin: new Date(),
+                name: user.name,
+                updatedAt: new Date(),
+              },
+            }
+          );
         } else {
           await db.collection("users").insertOne({
             name: user.name || "",
@@ -142,5 +140,4 @@ export const {
       return session;
     },
   },
-
 });
