@@ -1,8 +1,8 @@
-import dbConnect from '@/lib/dbConnect';
-import { ObjectId } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import { NextResponse } from "next/server";
 
 export const POST = async (request) => {
+  let client;
 
   try {
     const { serviceId, userId, serviceDetails, bookingDate } = await request.json();
@@ -14,11 +14,15 @@ export const POST = async (request) => {
       );
     }
 
-    const collection = dbConnect('bookings');
+    client = new MongoClient(process.env.MONGODB_URI);
+
+
+    const database = client.db(process.env.DB_NAME);
+    const collection = database.collection('bookings');
 
     const booking = {
       serviceId: new ObjectId(serviceId),
-      userId: new ObjectId(userId),
+      userId: new ObjectId(userId), // You'll need to get this from your auth system
       serviceDetails,
       bookingDate: bookingDate || new Date(),
       status: 'pending',

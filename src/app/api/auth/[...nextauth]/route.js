@@ -69,7 +69,7 @@ export const {
   callbacks: {
     async signIn({ user, account }) {
       const client = await clientPromise;
-      const db = client.db("NearServe");
+      const db = client.db(process.env.DB_NAME);
 
       if (account.provider === "google") {
         const existingUser = await db

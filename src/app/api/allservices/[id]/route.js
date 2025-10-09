@@ -1,8 +1,9 @@
-import dbConnect from '@/lib/dbConnect';
-import { ObjectId } from 'mongodb';
+// src/app/api/allservices/[id]/route.js
+import { MongoClient, ObjectId } from 'mongodb';
 import { NextResponse } from "next/server";
 
 export const GET = async (request, { params }) => {
+  let client;
 
   try {
     const { id } = params;
@@ -14,7 +15,10 @@ export const GET = async (request, { params }) => {
       );
     }
 
-    const collection = dbConnect('allServices');
+    client = new MongoClient(process.env.MONGODB_URI);
+
+    const database = client.db(process.env.DB_NAME);
+    const collection = database.collection('allServices');
 
     const service = await collection.findOne({ _id: new ObjectId(id) });
 

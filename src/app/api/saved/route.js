@@ -1,8 +1,9 @@
-import dbConnect from '@/lib/dbConnect';
-import { ObjectId } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import { NextResponse } from "next/server";
 
 export const POST = async (request) => {
+  let client;
+
   try {
     const { serviceId, userId, serviceDetails } = await request.json();
 
@@ -13,7 +14,10 @@ export const POST = async (request) => {
       );
     }
 
-    const collection = dbConnect('savedServices');
+    client = new MongoClient(process.env.MONGODB_URI);
+
+    const database = client.db(process.env.DB_NAME);
+    const collection = database.collection('savedServices');
 
     // Check if already saved
     const existing = await collection.findOne({
