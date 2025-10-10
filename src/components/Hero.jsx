@@ -14,6 +14,7 @@ const Hero = () => {
           cleaning to repairs, tutoring to delivery - find the help you need,
           when you need it.
         </p>
+        <button className='primary-btn mx-auto text-center'>Get Started Now</button>
 
       </div>
     </section>

@@ -13,7 +13,7 @@ export async function POST(req) {
     }
 
     const client = await clientPromise;
-    const db = client.db("NearServe");
+    const db = client.db(process.env.DB_NAME);
     const usersCollection = db.collection("users");
 
     // check if user exists
