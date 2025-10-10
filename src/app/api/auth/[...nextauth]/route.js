@@ -37,7 +37,7 @@ export const {
       },
       async authorize(credentials) {
         const client = await clientPromise;
-        const db = client.db("NearServe");
+        const db = client.db(process.env.DB_NAME);
 
         const user = await db
           .collection("users")
