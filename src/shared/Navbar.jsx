@@ -10,8 +10,8 @@ import { signOut } from "next-auth/react";
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-const {user} = useSessionData();
-console.log(user);
+    const { user } = useSessionData();
+    console.log(user);
     useEffect(() => {
         const user = localStorage.getItem("nearserve_user");
         setIsLoggedIn(!!user);

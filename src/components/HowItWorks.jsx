@@ -38,7 +38,7 @@ const HowItWorks = () => {
     return colors[color] || colors.primary;
   };
   return (
-    <section className=" py-20">
+    <section className="bg-background py-20">
       <div className="fix-alignment">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="heading">How NearServe Works</h2>
