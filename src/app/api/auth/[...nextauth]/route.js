@@ -1,15 +1,17 @@
-import clientPromise from "@/lib/dbConnect";
-import bcrypt from "bcryptjs";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
+import bcrypt from "bcryptjs";
+import clientPromise from "@/lib/dbConnect";
 
 export const {
   handlers: { GET, POST },
 } = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
+  debug: process.env.NODE_ENV === "development",
 
   providers: [
+    // Google Provider (profile mapping included)
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -29,6 +31,8 @@ export const {
         };
       },
     }),
+
+    // Credentials Provider
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -39,86 +43,109 @@ export const {
         const client = await clientPromise;
         const db = client.db(process.env.DB_NAME);
 
+        // Validate input quickly
+        if (!credentials?.email || !credentials?.password) {
+          // return null so NextAuth treats as invalid credentials
+          return null;
+        }
+
+        // 1) Find user
         const user = await db
           .collection("users")
           .findOne({ email: credentials.email });
-        if (!user) throw new Error("No user found. Please sign up first.");
 
+        if (!user) {
+          // return null => signIn will get an error code (credentials signin failed)
+          return null;
+        }
+
+        // 2) Validate password
         const isValid = await bcrypt.compare(
           credentials.password,
           user.password
         );
-        if (!isValid) throw new Error("Invalid password");
 
+        if (!isValid) {
+          // invalid password
+          return null;
+        }
+
+        // 3) On success return a plain user object (no sensitive fields)
         return {
           id: user._id.toString(),
           name: user.name,
           email: user.email,
           role: user.role || "user",
           lastLogin: user.lastLogin || null,
-          image: user.image || "/default-profile.png", // fallback
+          image: user.image || "/default-profile.png",
         };
       },
     }),
   ],
 
   pages: {
-    signIn: "/signin",
+    signIn: "/auth/signin", // keep your signin page path
   },
 
   callbacks: {
+    // signIn: update DB on successful signin (Google or credentials)
     async signIn({ user, account }) {
-      const client = await clientPromise;
-      const db = client.db(process.env.DB_NAME);
+      try {
+        const client = await clientPromise;
+        const db = client.db(process.env.DB_NAME);
 
-      if (account.provider === "google") {
-        const existingUser = await db
-          .collection("users")
-          .findOne({ email: user.email });
         const image = user.image || "/default-profile.png";
 
-        if (existingUser) {
-          await db.collection("users").updateOne(
-            { email: user.email },
-            {
-              $set: {
-                lastLogin: new Date(),
-                name: user.name,
-                image,
-                updatedAt: new Date(),
-              },
-            }
-          );
-        } else {
-          await db.collection("users").insertOne({
-            name: user.name || "",
-            email: user.email,
-            image,
-            role: "user",
-            provider: "google",
-            createdAt: new Date(),
-            lastLogin: new Date(),
-          });
+        if (account?.provider === "google") {
+          // For Google: upsert user with profile image
+          const existingUser = await db
+            .collection("users")
+            .findOne({ email: user.email });
+
+          if (existingUser) {
+            await db.collection("users").updateOne(
+              { email: user.email },
+              {
+                $set: {
+                  name: user.name,
+                  image,
+                  lastLogin: new Date(),
+                  updatedAt: new Date(),
+                },
+              }
+            );
+          } else {
+            await db.collection("users").insertOne({
+              name: user.name || "",
+              email: user.email,
+              image,
+              role: "user",
+              provider: "google",
+              createdAt: new Date(),
+              lastLogin: new Date(),
+            });
+          }
         }
-      }
 
-      if (account.provider === "credentials") {
-        const existingUser = await db
-          .collection("users")
-          .findOne({ email: user.email });
-        if (!existingUser)
-          throw new Error("No user found. Please sign up first.");
-        await db
-          .collection("users")
-          .updateOne(
-            { email: user.email },
-            { $set: { lastLogin: new Date(), updatedAt: new Date() } }
-          );
-      }
+        if (account?.provider === "credentials") {
+          // For credentials: update lastLogin if user exists (authorize already ensured user exists)
+          await db
+            .collection("users")
+            .updateOne(
+              { email: user.email },
+              { $set: { lastLogin: new Date(), updatedAt: new Date() } }
+            );
+        }
 
-      return true;
+        return true;
+      } catch (err) {
+        console.error("signIn callback error:", err);
+        // don't throw — return false to indicate sign-in failed
+        return false;
+      }
     },
 
+    // attach useful data to JWT
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
@@ -129,8 +156,10 @@ export const {
       return token;
     },
 
+    // expose data on session
     async session({ session, token }) {
       if (token) {
+        session.user = session.user || {};
         session.user.id = token.id;
         session.user.role = token.role;
         session.user.lastLogin = token.lastLogin;

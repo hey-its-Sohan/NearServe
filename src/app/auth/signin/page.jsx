@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import Swal from "sweetalert2";
-import { FcGoogle } from "react-icons/fc";
 import GoogleAuth from "../GoogleAuth";
 
 const Signin = () => {
@@ -13,17 +12,30 @@ const Signin = () => {
   const router = useRouter();
 
   const onSubmit = async (data) => {
-    const res = await signIn("credentials", {
-      email: data.email,
-      password: data.password,
-      redirect: false,
-    });
+    try {
+      const res = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
 
-    if (res.ok) {
-      Swal.fire("Success", "Logged in successfully!", "success");
-      setTimeout(() => router.push("/"), 800);
-    } else {
-      Swal.fire("Error", res.error || "Invalid credentials", "error");
+      console.log("SignIn Response:", res); // Debugging
+
+      if (res.error || !res.ok || !res.url) {
+        Swal.fire({
+          icon: "error",
+          title: "Invalid Credentials",
+          text: "No user found or wrong password.",
+          confirmButtonColor: "#d33",
+        });
+        return;
+      } else {
+        Swal.fire("Success", "Logged in successfully!", "success");
+        setTimeout(() => router.push("/"), 800);
+      }
+    } catch (error) {
+      Swal.fire("Error", "Something went wrong", "error");
+      console.error(error);
     }
   };
 
@@ -31,7 +43,6 @@ const Signin = () => {
     <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4">
       <div className="w-full max-w-md bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
         <div className="p-6">
-          {/* Header with Logo */}
           <div className="text-center mb-6">
             <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-sky-500 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-md">
               <span className="text-white font-bold text-lg">NS</span>
@@ -42,9 +53,8 @@ const Signin = () => {
             </p>
           </div>
 
-          {/* Login Form */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {/* Email Field */}
+            {/* Email */}
             <div className="space-y-1.5">
               <label className="block text-sm font-medium text-gray-700">
                 Email Address
@@ -57,13 +67,11 @@ const Signin = () => {
               />
             </div>
 
-            {/* Password Field */}
+            {/* Password */}
             <div className="space-y-1.5">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Password
-                </label>
-              </div>
+              <label className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
               <input
                 {...register("password", { required: "Password is required" })}
                 type="password"
@@ -72,7 +80,7 @@ const Signin = () => {
               />
             </div>
 
-            {/* Sign In Button */}
+            {/* Submit */}
             <button
               type="submit"
               className="w-full bg-emerald-500 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-emerald-600 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-all shadow-sm hover:shadow-md mt-2"
@@ -93,7 +101,6 @@ const Signin = () => {
             <GoogleAuth />
           </form>
 
-          {/* Sign Up Link */}
           <p className="text-center text-xs text-gray-600 mt-6">
             Don't have an account?{" "}
             <Link

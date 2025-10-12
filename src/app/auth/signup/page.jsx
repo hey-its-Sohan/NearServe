@@ -122,7 +122,7 @@ export default function Signup() {
               />
               {errors.img && (
                 <p className="text-sm text-red-500 mt-1">
-                  {errors.img.message}
+                  {errors.image.message}
                 </p>
               )}
             </div>
