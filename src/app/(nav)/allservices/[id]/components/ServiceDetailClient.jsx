@@ -1,6 +1,8 @@
+// src/app/(nav)/allservices/[id]/ServiceDetailClient.jsx
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Star, MapPin, User, Phone, Clock, Shield, Heart, Calendar, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -11,13 +13,12 @@ import { toast } from 'react-toastify';
 
 const ServiceDetailClient = ({ service }) => {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [isBooking, setIsBooking] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isBooked, setIsBooked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-
-  // userId from auth context
-  const userId = '507f1f77bcf86cd799439011';
+  const [loadingStatus, setLoadingStatus] = useState(true);
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('en-BD', {
@@ -27,9 +28,66 @@ const ServiceDetailClient = ({ service }) => {
     }).format(price);
   };
 
-  // sending booking data to database
+  // Check booking and saved status when component loads or session changes
+  useEffect(() => {
+    const checkStatus = async () => {
+      if (!session?.user?.email) {
+        setLoadingStatus(false);
+        return;
+      }
+
+      try {
+        // Check booking status
+        const bookingResponse = await fetch('/api/bookings/check', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            serviceId: service._id,
+            userEmail: session.user.email
+          }),
+        });
+
+        if (bookingResponse.ok) {
+          const bookingData = await bookingResponse.json();
+          setIsBooked(bookingData.isBooked);
+        }
+
+        // Check saved status
+        const savedResponse = await fetch('/api/saved/check', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            serviceId: service._id,
+            userEmail: session.user.email
+          }),
+        });
+
+        if (savedResponse.ok) {
+          const savedData = await savedResponse.json();
+          setIsSaved(savedData.isSaved);
+        }
+      } catch (error) {
+        console.error('Error checking status:', error);
+      } finally {
+        setLoadingStatus(false);
+      }
+    };
+
+    checkStatus();
+  }, [session, service._id]);
+
   const handleBookNow = async () => {
-    if (isBooked) return;
+    if (isBooked || !session) {
+      if (!session) {
+        toast.error('Please sign in to book services');
+        router.push('/signin');
+      }
+      return;
+    }
 
     setIsBooking(true);
     try {
@@ -40,7 +98,7 @@ const ServiceDetailClient = ({ service }) => {
         },
         body: JSON.stringify({
           serviceId: service._id,
-          userId: userId,
+          userEmail: session.user.email,
           serviceDetails: {
             title: service.title,
             description: service.description,
@@ -49,7 +107,8 @@ const ServiceDetailClient = ({ service }) => {
             location: service.location,
             providerName: service.providerName,
             contact: service.contact,
-            image: service.image
+            image: service.image,
+            rating: service.rating
           },
           bookingDate: new Date()
         }),
@@ -71,9 +130,14 @@ const ServiceDetailClient = ({ service }) => {
     }
   };
 
-  // sending saved data to database
   const handleSaveService = async () => {
-    if (isSaved) return;
+    if (isSaved || !session) {
+      if (!session) {
+        toast.error('Please sign in to save services');
+        router.push('/signin');
+      }
+      return;
+    }
 
     setIsSaving(true);
     try {
@@ -84,7 +148,7 @@ const ServiceDetailClient = ({ service }) => {
         },
         body: JSON.stringify({
           serviceId: service._id,
-          userId: userId,
+          userEmail: session.user.email,
           serviceDetails: {
             title: service.title,
             description: service.description,
@@ -116,7 +180,7 @@ const ServiceDetailClient = ({ service }) => {
   };
 
   return (
-    <div className="min-h-screen bg-background py-16">
+    <div className="min-h-screen bg-background py-12">
       <div className="fix-alignment">
         {/* Back Button */}
         <Button
@@ -186,7 +250,7 @@ const ServiceDetailClient = ({ service }) => {
                         : 'primary-btn'
                         }`}
                       onClick={handleBookNow}
-                      disabled={isBooking || isBooked}
+                      disabled={isBooking || isBooked || !session}
                     >
                       {isBooking ? (
                         <>
@@ -198,6 +262,8 @@ const ServiceDetailClient = ({ service }) => {
                           <CheckCircle className="w-5 h-5 mr-2" />
                           Booked Successfully
                         </>
+                      ) : !session ? (
+                        'Sign In to Book'
                       ) : (
                         <>
                           <Calendar className="w-5 h-5 mr-2" />
@@ -213,7 +279,7 @@ const ServiceDetailClient = ({ service }) => {
                         : 'text-primary hover:bg-primary hover:text-white'
                         }`}
                       onClick={handleSaveService}
-                      disabled={isSaving || isSaved}
+                      disabled={isSaving || isSaved || !session}
                     >
                       {isSaving ? (
                         <>
@@ -225,6 +291,8 @@ const ServiceDetailClient = ({ service }) => {
                           <CheckCircle className="w-5 h-5 mr-2" />
                           Saved to Favorites
                         </>
+                      ) : !session ? (
+                        'Sign In to Save'
                       ) : (
                         <>
                           <Heart className="w-5 h-5 mr-2" />
@@ -316,7 +384,7 @@ const ServiceDetailClient = ({ service }) => {
                     : 'primary-btn'
                     }`}
                   onClick={handleBookNow}
-                  disabled={isBooking || isBooked}
+                  disabled={isBooking || isBooked || !session}
                 >
                   {isBooking ? (
                     <>
@@ -328,6 +396,8 @@ const ServiceDetailClient = ({ service }) => {
                       <CheckCircle className="w-5 h-5 mr-2" />
                       Booked Successfully
                     </>
+                  ) : !session ? (
+                    'Sign In to Book'
                   ) : (
                     <>
                       <Calendar className="w-5 h-5 mr-2" />
@@ -343,7 +413,7 @@ const ServiceDetailClient = ({ service }) => {
                     : ''
                     }`}
                   onClick={handleSaveService}
-                  disabled={isSaving || isSaved}
+                  disabled={isSaving || isSaved || !session}
                 >
                   {isSaving ? (
                     <>
@@ -354,8 +424,9 @@ const ServiceDetailClient = ({ service }) => {
                     <>
                       <CheckCircle className="w-5 h-5 mr-2" />
                       Saved to Favorites
-                    </>
-                  ) : (
+                    </>) : !session ? (
+                      'Sign In to Save'
+                    ) : (
                     <>
                       <Heart className="w-5 h-5 mr-2" />
                       Save for Later

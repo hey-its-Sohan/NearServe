@@ -51,9 +51,9 @@ const BrowseByCategories = () => {
   };
 
   return (
-    <section className="bg-slate-100 py-20">
+    <section className="bg-background py-20">
       <div className="fix-alignment text-center">
-        <h1 className="heading">Browse By Category</h1>
+        <h1 className="heading ">Browse By Category</h1>
         <p className="text-gray text-xl mb-7">
           Explore our most popular service categories.
         </p>
@@ -68,7 +68,7 @@ const BrowseByCategories = () => {
                 {service.icon}
               </div>
 
-              <h3 className="mt-3 text-lg font-medium">{service.title}</h3>
+              <h3 className="mt-3 text-lg text-foreground font-medium">{service.title}</h3>
               <p className="text-gray  mt-1">{service.count} providers</p>
             </div>
           ))}

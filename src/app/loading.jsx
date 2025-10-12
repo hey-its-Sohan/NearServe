@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FaRocket } from 'react-icons/fa'; // Import rocket icon
+import { FaRocket } from 'react-icons/fa';
 
 const Loader = () => {
     const rocketVariants = {
@@ -30,12 +30,12 @@ const Loader = () => {
             <motion.div className="flex flex-col items-center" animate="animate">
                 <motion.div
                     variants={rocketVariants}
-                    className="mb-6 p-4 rounded-full border-2 border-lime-400 shadow-lg"
+                    className="mb-6 p-4 rounded-full border-2 border-primary shadow-lg"
                 >
-                    <FaRocket className="text-6xl text-lime-400" />
+                    <FaRocket className="text-6xl text-primary" />
                 </motion.div>
 
-                <motion.p variants={textVariants} className="text-2xl font-semibold text-lime-300">
+                <motion.p variants={textVariants} className="text-2xl font-semibold text-primary">
                     Loading...
                 </motion.p>
             </motion.div>
