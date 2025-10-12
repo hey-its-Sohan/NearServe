@@ -62,3 +62,23 @@ export const GET = async () => {
     }
   }
 };
+
+export const POST = async (req) => {
+  try {
+    const body = await req.json();
+    const collection = await dbConnect('allServices');
+
+    const result = await collection.insertOne(body);
+
+    return NextResponse.json(
+      { message: "Service added successfully!", insertedId: result.insertedId },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.error('POST Error:', error);
+    return NextResponse.json(
+      { error: 'Failed to add service' },
+      { status: 500 }
+    );
+  }
+};
