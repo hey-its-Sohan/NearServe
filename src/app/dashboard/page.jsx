@@ -15,11 +15,25 @@ export default function DashboardHome() {
   }, []);
 
   return (
-    <section className="py-8 sm:py-10 lg:py-14">
+    <section >
       <div className="fix-alignment">
         <div className="px-4 sm:px-6 lg:px-8 py-8 sm:py-10 grid place-items-center">
           <div className="w-full max-w-5xl mx-auto">
-            
+
+            {/* Headings */}
+            <div className="text-center ">
+              <h1
+                className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight "
+
+              >
+                Welcome to your <span className="text-gradient">Dashboard</span>!
+              </h1>
+              <p className="mt-3 text-gray max-w-3xl mx-auto">
+                Manage your profile, Booked, Post Service, and more. Use the sidebar to
+                navigate through different sections based on your role.
+              </p>
+            </div>
+
             <div className="relative w-full rounded-2xl overflow-hidden 
                             aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9]">
               {animationData ? (
@@ -34,19 +48,7 @@ export default function DashboardHome() {
               )}
             </div>
 
-            {/* Headings */}
-            <div className="text-center mt-6 sm:mt-8">
-              <h1
-                className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight "
-                
-              >
-                Welcome to your <span className="text-gradient">Dashboard</span>!
-              </h1>
-              <p className="mt-3 text-gray max-w-3xl mx-auto">
-                Manage your profile, Booked, Post Service, and more. Use the sidebar to
-                navigate through different sections based on your role.
-              </p>
-            </div>
+
           </div>
         </div>
       </div>

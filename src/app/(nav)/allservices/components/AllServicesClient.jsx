@@ -221,7 +221,7 @@ const AllServicesClient = ({ initialServices }) => {
                 </CardContent>
 
                 <CardFooter>
-                  <Link href={`allservices/${service._id}`}>
+                  <Link className='w-full' href={`allservices/${service._id}`}>
                     <Button className="w-full primary-btn group">
                       View Details
                       <svg
