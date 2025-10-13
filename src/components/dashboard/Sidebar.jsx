@@ -1,4 +1,3 @@
-// src/components/dashboard/Sidebar.jsx
 "use client";
 
 import Link from "next/link";
@@ -9,7 +8,6 @@ import {
 } from "lucide-react";
 
 import Image from "next/image";
-import logo from "../../../public/logo.png";
 import { useSessionData } from "@/app/context/SessionContext";
 
 function classNames(...c) { return c.filter(Boolean).join(" "); }
@@ -35,16 +33,20 @@ const adminItems = [
 function getItemsByRole(role) {
   if (role === "provider") return [...baseItems, ...providerItems];
   if (role === "admin") return [...baseItems, ...providerItems, ...adminItems];
-  return baseItems; // default/customer
+  return baseItems;
 }
 
 export default function Sidebar({ open = false, onClose }) {
   const pathname = usePathname();
 
-  // ✅ next-auth session context
   const { user, status } = useSessionData() || {};
-  const role = user?.role ?? "customer"; // safe default
+  const roleRaw = user?.role ?? null;
+  const role = typeof roleRaw === "string" ? roleRaw.toLowerCase() : null;
+
   const items = getItemsByRole(role);
+
+  const roleBadgeText =
+    status === "loading" ? "Loading…" : (role ? role[0].toUpperCase() + role.slice(1) : "—");
 
   return (
     <>
@@ -58,18 +60,17 @@ export default function Sidebar({ open = false, onClose }) {
         )}
       />
 
-      {/* Drawer / Static */}
+      {/* Static */}
       <aside
         className={classNames(
-          "fixed lg:static z-50 top-0 left-0 h-full w-72 border-r border-border bg-card text-foreground transition-transform",
+          "fixed lg:static z-50 top-0 left-0 h-full w-72 border-r border-border bg-card text-foreground transition-transform min-h-screen",
           open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         )}
       >
         <div className="flex items-center justify-between px-5 py-4 border-b border-border">
-          <Link href="/" className="flex items-center gap-2">
-            {/* Next/Image static import already has intrinsic size; className দিয়ে ভিজ্যুয়াল সাইজ */}
-            <Image src={logo} alt="Logo" className="h-10 w-8" priority />
-            <span className="text-2xl font-extrabold text-gradient">NearServe</span>
+          <Link href="/" className="flex items-center gap-2" onClick={onClose}>
+            
+            <span className="text-2xl font-extrabold text-gradient">Dashboard</span>
           </Link>
           <button onClick={onClose} className="lg:hidden p-2 rounded-md hover:bg-muted/50">
             <X className="w-5 h-5" />
@@ -89,6 +90,8 @@ export default function Sidebar({ open = false, onClose }) {
                     ? "bg-primary/10 text-primary border-primary/30"
                     : "border-transparent hover:bg-muted/50"
                 )}
+                aria-current={active ? "page" : undefined}
+                onClick={onClose}
               >
                 <Icon className={classNames("w-5 h-5", active && "text-primary")} />
                 <span className="font-medium">{label}</span>
@@ -99,9 +102,7 @@ export default function Sidebar({ open = false, onClose }) {
           {/* Role badge */}
           <div className="mt-6 mx-1 rounded-xl p-4 border border-border bg-muted/30">
             <p className="text-xs text-gray mb-1">Current role</p>
-            <p className="text-sm font-semibold capitalize">
-              {status === "loading" ? "Loading…" : role}
-            </p>
+            <p className="text-sm font-semibold capitalize">{roleBadgeText}</p>
           </div>
         </nav>
       </aside>
