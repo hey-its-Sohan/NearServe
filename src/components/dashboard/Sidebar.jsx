@@ -49,13 +49,13 @@ export default function Sidebar({ open = false, onClose }) {
     status === "loading" ? "Loading…" : (role ? role[0].toUpperCase() + role.slice(1) : "—");
 
   return (
-    <>
+    <section>
       {/* Overlay for mobile */}
       <div
         aria-hidden
         onClick={onClose}
         className={classNames(
-          "fixed inset-0 z-40 bg-black/30 backdrop-blur-sm lg:hidden transition-opacity",
+          "fixed inset-0 z-40 min-h-screen bg-black/30 backdrop-blur-sm lg:hidden transition-opacity",
           open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         )}
       />
@@ -69,7 +69,7 @@ export default function Sidebar({ open = false, onClose }) {
       >
         <div className="flex items-center justify-between px-5 py-4 border-b border-border">
           <Link href="/" className="flex items-center gap-2" onClick={onClose}>
-            
+
             <span className="text-2xl font-extrabold text-gradient">Dashboard</span>
           </Link>
           <button onClick={onClose} className="lg:hidden p-2 rounded-md hover:bg-muted/50">
@@ -106,6 +106,6 @@ export default function Sidebar({ open = false, onClose }) {
           </div>
         </nav>
       </aside>
-    </>
+    </section>
   );
 }
