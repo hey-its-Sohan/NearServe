@@ -17,27 +17,25 @@ import Contact from "./Sections/Contact";
 export default function AboutPage() {
   return (
     <div className="bg-background text-foreground">
-     
-     <Hero></Hero>
 
-     
-     <StorySection></StorySection>
+      <Hero></Hero>
 
-     
+
+      <StorySection></StorySection>
+
+
       <OurValues></OurValues>
 
-     
+
       <Team></Team>
 
-      {/* How it Works */}
-    <HowItWorks></HowItWorks>
 
       {/* CTA */}
       <CTA></CTA>
 
       {/* Contact */}
       <Contact></Contact>
-      
+
     </div>
   );
 }

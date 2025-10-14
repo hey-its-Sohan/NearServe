@@ -4,12 +4,12 @@
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { Star, MapPin, User, Phone, Clock, Shield, Heart, Calendar, CheckCircle } from 'lucide-react';
+import { Star, MapPin, User, Phone, Clock, Shield, Heart, Calendar, CheckCircle, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'react-toastify';
-
 
 const ServiceDetailClient = ({ service }) => {
   const router = useRouter();
@@ -19,6 +19,12 @@ const ServiceDetailClient = ({ service }) => {
   const [isBooked, setIsBooked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [loadingStatus, setLoadingStatus] = useState(true);
+
+  // Review states
+  const [reviews, setReviews] = useState(service.reviews || []);
+  const [reviewText, setReviewText] = useState('');
+  const [reviewRating, setReviewRating] = useState(5);
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('en-BD', {
@@ -106,6 +112,7 @@ const ServiceDetailClient = ({ service }) => {
             price: service.price,
             location: service.location,
             providerName: service.providerName,
+            providerId: service.providerId,
             contact: service.contact,
             image: service.image,
             rating: service.rating
@@ -179,6 +186,79 @@ const ServiceDetailClient = ({ service }) => {
     }
   };
 
+  const handleSubmitReview = async () => {
+    if (!session) {
+      toast.error('Please sign in to post a review');
+      router.push('/signin');
+      return;
+    }
+
+    if (!reviewText.trim()) {
+      toast.error('Please write a review');
+      return;
+    }
+
+    setIsSubmittingReview(true);
+    try {
+      const response = await fetch(`/api/allservices/${service._id}/reviews`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userEmail: session.user.email,
+          userName: session.user.name,
+          userImage: session.user.image,
+          rating: reviewRating,
+          comment: reviewText.trim(),
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Update local reviews state with the new review
+        setReviews(prev => [result.review, ...prev]);
+        setReviewText('');
+        setReviewRating(5);
+        toast.success('Review posted successfully!');
+      } else {
+        toast.error(result.error || 'Failed to post review');
+      }
+    } catch (error) {
+      console.error('Review submission error:', error);
+      toast.error('Failed to post review. Please try again.');
+    } finally {
+      setIsSubmittingReview(false);
+    }
+  };
+
+  const calculateAverageRating = () => {
+    if (reviews.length === 0) return service.rating || 0;
+    const total = reviews.reduce((sum, review) => sum + review.rating, 0);
+    return (total / reviews.length).toFixed(1);
+  };
+
+  const StarRating = ({ rating, onRatingChange, readonly = false }) => {
+    return (
+      <div className="flex gap-1">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <button
+            key={star}
+            type="button"
+            onClick={() => !readonly && onRatingChange(star)}
+            disabled={readonly}
+            className={`${readonly ? 'cursor-default' : 'cursor-pointer hover:scale-110'} transition-transform`}
+          >
+            <Star
+              className={`w-6 h-6 ${star <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
+            />
+          </button>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-background py-12">
       <div className="fix-alignment">
@@ -229,8 +309,8 @@ const ServiceDetailClient = ({ service }) => {
                   <div className="flex flex-wrap gap-4 mb-4">
                     <div className="flex items-center gap-2">
                       <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                      <span className="font-semibold">{service.rating}</span>
-                      <span className="text-gray">Rating</span>
+                      <span className="font-semibold">{calculateAverageRating()}</span>
+                      <span className="text-gray">({reviews.length} reviews)</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <MapPin className="w-5 h-5 text-primary" />
@@ -317,6 +397,99 @@ const ServiceDetailClient = ({ service }) => {
               </CardContent>
             </Card>
 
+            {/* Reviews Section */}
+            <Card className="mb-6 border-none">
+              <CardHeader>
+                <CardTitle className="text-2xl flex items-center gap-2">
+                  <MessageCircle className="w-6 h-6 text-primary" />
+                  Customer Reviews ({reviews.length})
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {/* Review Form */}
+                <div className="bg-gray-50 rounded-lg p-6 mb-8">
+                  <h3 className="text-lg font-semibold mb-4">Write a Review</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Your Rating</label>
+                      <StarRating
+                        rating={reviewRating}
+                        onRatingChange={setReviewRating}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Your Review</label>
+                      <Textarea
+                        value={reviewText}
+                        onChange={(e) => setReviewText(e.target.value)}
+                        placeholder="Share your experience with this service..."
+                        rows={4}
+                        className="w-full"
+                      />
+                    </div>
+                    <Button
+                      onClick={handleSubmitReview}
+                      disabled={isSubmittingReview || !session}
+                      className="primary-btn"
+                    >
+                      {isSubmittingReview ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Posting Review...
+                        </>
+                      ) : !session ? (
+                        'Sign In to Review'
+                      ) : (
+                        'Submit Review'
+                      )}
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Reviews List */}
+                <div className="space-y-6">
+                  {reviews.length === 0 ? (
+                    <div className="text-center py-8">
+                      <MessageCircle className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                      <p className="text-gray text-lg">No reviews yet. Be the first to review this service!</p>
+                    </div>
+                  ) : (
+                    reviews.map((review, index) => (
+                      <div key={review._id || index} className="border-b border-gray-200 pb-6 last:border-0">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex items-center gap-3">
+                            {review.userImage ? (
+                              <img
+                                src={review.userImage}
+                                alt={review.userName}
+                                className="w-10 h-10 rounded-full"
+                              />
+                            ) : (
+                              <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                                <User className="w-5 h-5 text-primary" />
+                              </div>
+                            )}
+                            <div>
+                              <h4 className="font-semibold text-foreground">{review.userName}</h4>
+                              <p className="text-gray text-sm">
+                                {new Date(review.date).toLocaleDateString('en-US', {
+                                  year: 'numeric',
+                                  month: 'long',
+                                  day: 'numeric'
+                                })}
+                              </p>
+                            </div>
+                          </div>
+                          <StarRating rating={review.rating} readonly={true} />
+                        </div>
+                        <p className="text-gray leading-relaxed">{review.comment}</p>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Provider Information */}
             <Card className='border-none'>
               <CardHeader>
@@ -342,9 +515,9 @@ const ServiceDetailClient = ({ service }) => {
             </Card>
           </div>
 
-          {/* Sidebar */}
+          {/* Sidebar - Remains the same as before */}
           <div className="space-y-6">
-            {/* Booking Card */}
+            {/* Booking Card - Same as before */}
             <Card className="sticky border-none top-6">
               <CardHeader>
                 <CardTitle className="text-xl flex items-center gap-2">
@@ -441,7 +614,7 @@ const ServiceDetailClient = ({ service }) => {
               </CardContent>
             </Card>
 
-            {/* Features Card */}
+            {/* Features Card - Same as before */}
             <Card className='border-none'>
               <CardHeader>
                 <CardTitle className="text-xl">Why Choose This Service?</CardTitle>

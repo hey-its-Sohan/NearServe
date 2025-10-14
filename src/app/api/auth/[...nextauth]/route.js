@@ -73,6 +73,7 @@ export const {
         // 3) On success return a plain user object (no sensitive fields)
         return {
           id: user._id.toString(),
+          _id: user._id.toString(),
           name: user.name,
           email: user.email,
           role: user.role || "user",

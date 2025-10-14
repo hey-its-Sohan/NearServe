@@ -26,8 +26,8 @@ const Loader = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen text-gray-200">
-            <motion.div className="flex flex-col items-center" animate="animate">
+        <div className="flex flex-col items-center justify-center bg-background  min-h-screen text-gray-200">
+            <motion.div className="flex flex-col  items-center" animate="animate">
                 <motion.div
                     variants={rocketVariants}
                     className="mb-6 p-4 rounded-full border-2 border-primary shadow-lg"

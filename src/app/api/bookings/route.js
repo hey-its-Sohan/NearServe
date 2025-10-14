@@ -1,4 +1,4 @@
-// src/app/api/bookings/route.js
+// src/app/api/bookings/route.js - POST method only
 import { MongoClient, ObjectId } from 'mongodb';
 import { NextResponse } from "next/server";
 
@@ -10,6 +10,7 @@ export const POST = async (request) => {
     const { serviceId, userEmail, serviceDetails, bookingDate } = body;
 
     console.log('Booking request from:', userEmail);
+    console.log('Service details received:', serviceDetails);
 
     if (!serviceId || !userEmail) {
       return NextResponse.json(
@@ -18,7 +19,6 @@ export const POST = async (request) => {
       );
     }
 
-    // Validate serviceId
     if (!ObjectId.isValid(serviceId)) {
       return NextResponse.json(
         { error: 'Invalid Service ID format' },
@@ -31,6 +31,7 @@ export const POST = async (request) => {
     const database = client.db(process.env.DB_NAME);
     const bookingsCollection = database.collection('bookings');
     const usersCollection = database.collection('users');
+    const servicesCollection = database.collection('allServices');
 
     // Find user by email to get MongoDB _id
     const user = await usersCollection.findOne({ email: userEmail });
@@ -42,18 +43,48 @@ export const POST = async (request) => {
       );
     }
 
+    // Get the service to ensure we have the correct providerId
+    const service = await servicesCollection.findOne({ _id: new ObjectId(serviceId) });
+
+    if (!service) {
+      return NextResponse.json(
+        { error: 'Service not found' },
+        { status: 404 }
+      );
+    }
+
+    // Use providerId from the service, not from serviceDetails
+    const providerId = service.providerId;
+
+    if (!providerId) {
+      return NextResponse.json(
+        { error: 'Service provider not found. Please contact support.' },
+        { status: 400 }
+      );
+    }
+
+    console.log('Using providerId from service:', providerId);
+
     const booking = {
       serviceId: new ObjectId(serviceId),
       userId: user._id,
       userEmail: userEmail,
-      serviceDetails,
+      serviceDetails: {
+        ...serviceDetails,
+        providerId: providerId // Override with correct providerId from service
+      },
       bookingDate: bookingDate || new Date(),
       status: 'pending',
+      providerId: new ObjectId(providerId),
       createdAt: new Date(),
       updatedAt: new Date()
     };
 
+    console.log('Creating booking with providerId:', providerId);
+
     const result = await bookingsCollection.insertOne(booking);
+
+    console.log('Booking created with ID:', result.insertedId);
 
     return NextResponse.json({
       success: true,
@@ -65,59 +96,6 @@ export const POST = async (request) => {
     console.error('Booking error:', error);
     return NextResponse.json(
       { error: 'Failed to create booking: ' + error.message },
-      { status: 500 }
-    );
-  }
-};
-
-export const DELETE = async (request) => {
-  let client;
-
-  try {
-    const body = await request.json();
-    const { bookingId } = body;
-
-    if (!bookingId) {
-      return NextResponse.json(
-        { error: 'Booking ID is required' },
-        { status: 400 }
-      );
-    }
-
-    // Validate bookingId
-    if (!ObjectId.isValid(bookingId)) {
-      return NextResponse.json(
-        { error: 'Invalid Booking ID format' },
-        { status: 400 }
-      );
-    }
-
-    client = new MongoClient(process.env.MONGODB_URI);
-
-    const database = client.db(process.env.DB_NAME);
-    const bookingsCollection = database.collection('bookings');
-
-    // Delete the booking
-    const result = await bookingsCollection.deleteOne({
-      _id: new ObjectId(bookingId)
-    });
-
-    if (result.deletedCount === 0) {
-      return NextResponse.json(
-        { error: 'Booking not found' },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json({
-      success: true,
-      message: 'Booking cancelled successfully'
-    });
-
-  } catch (error) {
-    console.error('Delete booking error:', error);
-    return NextResponse.json(
-      { error: 'Failed to cancel booking: ' + error.message },
       { status: 500 }
     );
   }

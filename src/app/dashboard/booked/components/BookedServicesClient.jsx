@@ -114,9 +114,9 @@ const BookedServicesClient = () => {
   const getStatusBadge = (status) => {
     const statusConfig = {
       pending: { color: 'bg-yellow-500', text: 'Pending' },
-      confirmed: { color: 'bg-green-500', text: 'Confirmed' },
+      accepted: { color: 'bg-green-500', text: 'Accepted' },
       completed: { color: 'bg-blue-500', text: 'Completed' },
-      cancelled: { color: 'bg-red-500', text: 'Cancelled' }
+      declined: { color: 'bg-red-500', text: 'Declined' }
     };
 
     const config = statusConfig[status] || statusConfig.pending;

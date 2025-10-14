@@ -4,7 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, User, BookmarkCheck, Heart, PlusCircle,
-  Briefcase, Users, BarChart3, X, House
+  Briefcase, Users, X, House,
+  ClipboardPenLine
 } from "lucide-react";
 
 import Image from "next/image";
@@ -21,13 +22,15 @@ const baseItems = [
 ];
 
 const providerItems = [
+  { label: "Booking Requests", href: "/dashboard/booking-requests", icon: ClipboardPenLine },
   { label: "Post Service", href: "/dashboard/post-service", icon: PlusCircle },
   { label: "My Services", href: "/dashboard/my-services", icon: Briefcase },
+
 ];
 
 const adminItems = [
   { label: "All Users", href: "/dashboard/all-users", icon: Users },
-  { label: "Reports", href: "/dashboard/reports", icon: BarChart3 },
+
 ];
 
 function getItemsByRole(role) {

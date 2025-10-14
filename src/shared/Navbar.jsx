@@ -54,9 +54,9 @@ const Navbar = () => {
           <Link href="/about" className="hover:text-primary transition-colors duration-200">
             About
           </Link>
-          <Link href="/dashboard" className="hover:text-primary transition-colors duration-200">
+          {user && <Link href="/dashboard" className="hover:text-primary transition-colors duration-200">
             Dashboard
-          </Link>
+          </Link>}
         </div>
 
         {/* === Right: Buttons (Hidden on Mobile) === */}
@@ -149,13 +149,13 @@ const Navbar = () => {
           >
             About
           </Link>
-          <Link
+          {user && <Link
             href="/dashboard"
             className="block hover:text-primary transition-colors duration-200"
             onClick={() => setIsMenuOpen(false)}
           >
             Dashboard
-          </Link>
+          </Link>}
 
           {/* Theme toggle (mobile) */}
           <div className="pt-3 space-x-2">

@@ -1,9 +1,9 @@
 import React from 'react';
-import { FaHandshake } from "react-icons/fa"; // Assuming FaHandshake is still needed for the icon
+import { FaHandshake } from "react-icons/fa";
 
 function StorySection() {
     return (
-        <section className=" fix-alignment grid lg:grid-cols-2 gap-14 items-start">
+        <section className=" fix-alignment py-20 lg:mt-10 grid lg:grid-cols-2 gap-14 items-start">
 
             <div className='col-span-1 text-[18px] pr-2'>
                 <h2 className="heading">Our Story</h2>
