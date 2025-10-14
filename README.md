@@ -83,4 +83,23 @@ NearServe is a modern, full-stack service marketplace platform built with Next.j
    ```bash
    npm run dev
 
+## ⚙️ Environment Configuration
+
+Create a .env.local file in the root directory:
+```bash
+
+# Database Configuration
+MONGODB_URI=your_mongodb_connection_string
+DB_NAME=your_database_name
+
+# Authentication
+NEXTAUTH_SECRET=your_nextauth_secret
+NEXTAUTH_URL=http://localhost:3000
+
+# OAuth Providers
+GOOGLE_CLIENT_ID=your_google_oauth_client_id
+GOOGLE_CLIENT_SECRET=your_google_oauth_client_secret
+
+# Application
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
