@@ -1,14 +1,16 @@
-// src/app/api/allservices/route.js
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import { NextResponse } from "next/server";
 
-export const GET = async () => {
+export const GET = async (request) => {
   let client;
 
   try {
-    console.log('API: Starting fetch...');
+    const { searchParams } = new URL(request.url);
+    const email = searchParams.get('email');
+    const providerId = searchParams.get('providerId');
 
-    // Check environment variables
+    console.log('API: Fetching services with params:', { email, providerId });
+
     if (!process.env.MONGODB_URI) {
       throw new Error('MONGODB_URI environment variable is not defined');
     }
@@ -17,30 +19,32 @@ export const GET = async () => {
       throw new Error('DB_NAME environment variable is not defined');
     }
 
-    console.log('API: Connecting to MongoDB...');
-
-    // Connect to MongoDB
-    client = new MongoClient(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-
-    console.log('API: Connected to MongoDB successfully');
+    client = new MongoClient(process.env.MONGODB_URI);
+    await client.connect();
 
     const database = client.db(process.env.DB_NAME);
     const collection = database.collection('allServices');
 
-    // Check if collection exists
-    const collections = await database.listCollections({ name: 'allServices' }).toArray();
-    console.log('API: Collections found:', collections.length);
+    let query = {};
 
-    if (collections.length === 0) {
-      // Collection doesn't exist, return empty array
-      console.log('API: allServices collection does not exist');
-      return NextResponse.json([]);
+    // Filter by providerId if provided
+    if (providerId) {
+      if (!ObjectId.isValid(providerId)) {
+        return NextResponse.json(
+          { error: 'Invalid provider ID format' },
+          { status: 400 }
+        );
+      }
+      query.providerId = providerId;
+    }
+    // Fallback: Filter by provider email if provided
+    else if (email) {
+      query.providerEmail = email;
     }
 
-    const data = await collection.find().toArray();
+    console.log('API: Querying with:', query);
+
+    const data = await collection.find(query).toArray();
     console.log(`API: Found ${data.length} services`);
 
     return NextResponse.json(data);
@@ -54,9 +58,12 @@ export const GET = async () => {
       },
       { status: 500 }
     );
+  } finally {
+    if (client) {
+      await client.close();
+    }
   }
 };
-
 // Post Api
 
 export const POST = async (req) => {

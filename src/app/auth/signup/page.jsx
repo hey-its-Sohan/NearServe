@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import Swal from "sweetalert2";
-import GoogleAuth from "../GoogleAuth";
+import { useRouter } from "next/navigation";
 
 export default function Signup() {
   const {
@@ -21,8 +21,9 @@ export default function Signup() {
       role: "provider", // default radio value
     },
   });
-  
+
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -34,6 +35,7 @@ export default function Signup() {
         draggable: true,
       });
       reset();
+      setTimeout(() => router.push("/auth/signin"), 800);
     } catch (err) {
       console.error(err);
       Swal.fire({
@@ -208,18 +210,6 @@ export default function Signup() {
                 "Sign Up"
               )}
             </button>
-
-            {/* Divider */}
-            <div className="relative flex items-center my-4">
-              <div className="flex-grow border-t border-gray-300"></div>
-              <span className="flex-shrink mx-3 text-gray-500 text-xs">
-                Or continue with
-              </span>
-              <div className="flex-grow border-t border-gray-300"></div>
-            </div>
-
-            {/* Google Sign Up */}
-            <GoogleAuth />
 
             {/* Sign In Link */}
             <p className="text-center text-xs text-gray-600 mt-6">

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import Swal from "sweetalert2";
-import GoogleAuth from "../GoogleAuth";
+
 
 const Signin = () => {
   const { register, handleSubmit } = useForm();
@@ -88,17 +88,6 @@ const Signin = () => {
               Sign In
             </button>
 
-            {/* Divider */}
-            <div className="relative flex items-center my-4">
-              <div className="flex-grow border-t border-gray-300"></div>
-              <span className="flex-shrink mx-3 text-gray-500 text-xs">
-                Or continue with
-              </span>
-              <div className="flex-grow border-t border-gray-300"></div>
-            </div>
-
-            {/* Google Sign In */}
-            <GoogleAuth />
           </form>
 
           <p className="text-center text-xs text-gray-600 mt-6">
