@@ -170,18 +170,18 @@ const Navbar = () => {
 
             {!isLoggedIn ? (
               <>
-                <button
-                  onClick={() => alert("Login Clicked!")}
-                  className="primary-btn text-sm px-4 py-2"
+                <Link
+                  href={"/auth/signin"}
+                  className="primary-btn text-sm md:text-base px-4 py-2"
                 >
                   Login
-                </button>
-                <button
-                  onClick={() => alert("Register Clicked!")}
-                  className="secondary-btn text-sm px-4 py-2"
+                </Link>
+                <Link
+                  href={"/auth/signup"}
+                  className="secondary-btn text-sm md:text-base px-4 py-2"
                 >
                   Register
-                </button>
+                </Link>
               </>
             ) : (
               <button onClick={handleLogout} className="secondary-btn text-sm px-4 py-2">

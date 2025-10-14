@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# NearServe - Service Marketplace Platform
 
-## Getting Started
+NearServe is a modern, full-stack service marketplace platform built with Next.js that connects service providers with customers in their local area.
 
-First, run the development server:
+![Next.js](https://img.shields.io/badge/Next.js-15.5.4-black?style=for-the-badge&logo=next.js)
+![React](https://img.shields.io/badge/React-18-blue?style=for-the-badge&logo=react)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green?style=for-the-badge&logo=mongodb)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC?style=for-the-badge&logo=tailwind-css)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 👥 Multi-Role System
+- **Customers**: Browse services, book appointments, leave reviews, save favorites
+- **Providers**: List services, manage bookings, track requests, update availability
+- **Admin**: Platform management and user analytics
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### 🛠️ Core Functionality
+- **Service Management**: Create, read, update, and delete services
+- **Booking System**: Real-time booking with accept/decline functionality
+- **Review System**: Star ratings and customer feedback
+- **Search & Filter**: Advanced search by category, location, and keywords
+- **Authentication**: Secure login with Google OAuth and session management
+- **Responsive Design**: Mobile-first design that works on all devices
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 💼 Provider Dashboard
+- Service listing creation and management
+- Booking request management (Accept/Decline)
+- Availability and contact management
 
-## Learn More
+### 🛍️ Customer Experience
+- Service discovery with advanced filtering
+- Secure booking process with status tracking
+- Review and rating system for services
+- Favorite services for quick access
+- Complete booking history
 
-To learn more about Next.js, take a look at the following resources:
+## 🛠️ Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Frontend
+- **Next.js 15** - React framework with App Router
+- **React Js** - Modern UI library with hooks
+- **Tailwind CSS** - Utility-first CSS framework
+- **Lucide React** - Beautiful, consistent icons
+- **React Toastify** - User notifications
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Backend
+- **Next.js API Routes** - Serverless API endpoints
+- **MongoDB** - NoSQL database for flexible data
+- **NextAuth.js** - Complete authentication solution
 
-## Deploy on Vercel
+### Authentication & Security
+- **NextAuth.js** - Authentication library
+- **Google OAuth** - Social login integration
+- **JWT Tokens** - Secure session management
+- **Protected Routes** - Role-based access control
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Deployment & Infrastructure
+- **Vercel** - Platform deployment and hosting
+- **MongoDB Atlas** - Cloud database service
+- **Environment Variables** - Secure configuration
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18.17 or later
+- MongoDB Atlas account
+- Google OAuth credentials
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-username/nearserve.git
+   cd nearserve
+
+2. **Install dependencies**
+   ```bash
+   npm install
+
+3. **Set up environment variables**
+
+4. **Run the development server**
+   ```bash
+   npm run dev
+
+## ⚙️ Environment Configuration
+
+Create a .env.local file in the root directory:
+
+# Database Configuration
+MONGODB_URI=your_mongodb_connection_string
+DB_NAME=your_database_name
+
+# Authentication
+NEXTAUTH_SECRET=your_nextauth_secret
+NEXTAUTH_URL=http://localhost:3000
+
+# OAuth Providers
+GOOGLE_CLIENT_ID=your_google_oauth_client_id
+GOOGLE_CLIENT_SECRET=your_google_oauth_client_secret
+
+# Application
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
