@@ -63,22 +63,47 @@ export const GET = async () => {
   }
 };
 
+
+
 export const POST = async (req) => {
+  let client;
   try {
     const body = await req.json();
-    const collection = await dbConnect('allServices');
 
-    const result = await collection.insertOne(body);
+    if (!process.env.MONGODB_URI || !process.env.DB_NAME) {
+      throw new Error("Missing environment variables");
+    }
+
+    client = new MongoClient(process.env.MONGODB_URI);
+    await client.connect();
+
+    const db = client.db(process.env.DB_NAME);
+    const collection = db.collection("allServices");
+
+    // Optional basic validation
+    if (!body.title || !body.price || !body.description) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    const result = await collection.insertOne({
+      ...body,
+      createdAt: new Date(),
+    });
 
     return NextResponse.json(
-      { message: "Service added successfully!", insertedId: result.insertedId },
+      { message: "Service added successfully", insertedId: result.insertedId },
       { status: 201 }
     );
   } catch (error) {
-    console.error('POST Error:', error);
+    console.error("POST Error:", error);
     return NextResponse.json(
-      { error: 'Failed to add service' },
+      { error: "Failed to add service", details: error.message },
       { status: 500 }
     );
+  } finally {
+    if (client) await client.close();
   }
 };

@@ -79,7 +79,7 @@ export default function AddServicePage() {
           availability: "Available",
           rating: "",
         });
-        router.push("/services");
+        router.push("/allservices");
       } else {
         toast.error("Failed to add service!");
       }
