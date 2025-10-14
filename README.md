@@ -86,6 +86,7 @@ NearServe is a modern, full-stack service marketplace platform built with Next.j
 ## ⚙️ Environment Configuration
 
 Create a .env.local file in the root directory:
+```bash
 
 # Database Configuration
 MONGODB_URI=your_mongodb_connection_string
