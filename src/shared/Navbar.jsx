@@ -54,12 +54,14 @@ const Navbar = () => {
           <Link href="/about" className="hover:text-primary transition-colors duration-200">
             About
           </Link>
-          {user && <Link href="/dashboard" className="hover:text-primary transition-colors duration-200">
-            Dashboard
-          </Link>}
+          {user && (
+            <Link href="/dashboard" className="hover:text-primary transition-colors duration-200">
+              Dashboard
+            </Link>
+          )}
         </div>
 
-        {/* === Right: Buttons (Hidden on Mobile) === */}
+        {/* === Right: Buttons (Desktop) === */}
         <div className="hidden md:flex items-center space-x-3 lg:space-x-5">
           {/* Theme toggle (desktop) */}
           <button
@@ -73,16 +75,10 @@ const Navbar = () => {
 
           {!user ? (
             <>
-              <Link
-                href={"/auth/signin"}
-                className="primary-btn text-sm md:text-base px-4 py-2"
-              >
+              <Link href={"/auth/signin"} className="primary-btn text-sm md:text-base px-4 py-2">
                 Login
               </Link>
-              <Link
-                href={"/auth/signup"}
-                className="secondary-btn text-sm md:text-base px-4 py-2"
-              >
+              <Link href={"/auth/signup"} className="secondary-btn text-sm md:text-base px-4 py-2">
                 Register
               </Link>
             </>
@@ -93,36 +89,49 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* === Mobile Menu Toggle Button === */}
-        <button
-          className="md:hidden p-2 rounded-lg border border-border hover:bg-muted transition"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          {isMenuOpen ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          )}
-        </button>
+        {/* === Right: Theme + Hamburger (Mobile only) === */}
+        <div className="md:hidden flex items-center gap-2">
+          {/* Theme toggle (mobile) — OUTSIDE the dropdown */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-lg border border-border hover:bg-muted transition"
+            aria-label="Toggle theme"
+            title="Toggle theme"
+          >
+            {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          </button>
+
+          {/* Mobile Menu Toggle Button */}
+          <button
+            className="p-2 rounded-lg border border-border hover:bg-muted transition"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMenuOpen ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* === Mobile & Tablet Dropdown Menu === */}
@@ -149,37 +158,25 @@ const Navbar = () => {
           >
             About
           </Link>
-          {user && <Link
-            href="/dashboard"
-            className="block hover:text-primary transition-colors duration-200"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Dashboard
-          </Link>}
-
-          {/* Theme toggle (mobile) */}
-          <div className="pt-3 flex items-center justify-center space-x-2">
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg border border-border hover:bg-muted transition inline-flex items-center justify-center"
-              aria-label="Toggle theme"
-              title="Toggle theme"
+          {user && (
+            <Link
+              href="/dashboard"
+              className="block hover:text-primary transition-colors duration-200"
+              onClick={() => setIsMenuOpen(false)}
             >
-              {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-            </button>
+              Dashboard
+            </Link>
+          )}
 
+          {/* (Removed the old mobile theme toggle from inside the dropdown) */}
+
+          <div className="pt-3 space-x-2">
             {!isLoggedIn ? (
               <>
-                <Link
-                  href={"/auth/signin"}
-                  className="primary-btn text-sm md:text-base px-4 py-2"
-                >
+                <Link href={"/auth/signin"} className="primary-btn text-sm md:text-base px-4 py-2">
                   Login
                 </Link>
-                <Link
-                  href={"/auth/signup"}
-                  className="secondary-btn text-sm md:text-base px-4 py-2"
-                >
+                <Link href={"/auth/signup"} className="secondary-btn text-sm md:text-base px-4 py-2">
                   Register
                 </Link>
               </>
