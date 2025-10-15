@@ -158,7 +158,7 @@ const Navbar = () => {
           </Link>}
 
           {/* Theme toggle (mobile) */}
-          <div className="pt-3 space-x-2">
+          <div className="pt-3 flex items-center justify-center space-x-2">
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg border border-border hover:bg-muted transition inline-flex items-center justify-center"

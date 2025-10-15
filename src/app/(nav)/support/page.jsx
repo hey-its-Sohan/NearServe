@@ -17,18 +17,22 @@ export default function SupportPage() {
 
   return (
     <main className="min-h-screen">
-      
+
       <section className="bg-gradient text-white">
-        <div className="fix-alignment py-10 lg:py-14">
-          <h1 className="title">Support Center</h1>
-          <p className="mt-2 opacity-90">
-            Tell us what you need help with—we’ll get you the right guidance.
-          </p>
+        <div className="fix-alignment py-20 lg:py-28">
+          <div className="max-w-3xl mx-auto text-center">
+            <h1 className="text-5xl lg:text-6xl font-bold mb-6">
+              Support Center
+            </h1>
+            <p className="text-xl lg:text-2xl opacity-90 leading-relaxed">
+              Tell us what you need help with—we'll get you the right guidance.
+            </p>
+          </div>
         </div>
       </section>
 
       {/* form */}
-      <section className="py-10 lg:py-12">
+      <section className="py-10 bg-background lg:py-12">
         <div className="fix-alignment grid gap-8 lg:grid-cols-[1fr,380px]">
           <div className="card-animate">
             <h2 className="heading">Create a support request</h2>
@@ -88,7 +92,7 @@ export default function SupportPage() {
           <aside className="card-animate h-max">
             <h3 className="heading">Quick help</h3>
             <ul className="text-gray space-y-3 mt-2">
-              
+
               <li>
                 <span className="font-medium text-foreground">Policies:</span>{" "}
                 <a href="/terms" className="text-primary hover:underline">Terms</a> ·{" "}

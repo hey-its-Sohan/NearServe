@@ -67,9 +67,11 @@ const CTA = () => {
               </button>
             </Link>
 
-            <button className="group border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-foreground transition-all duration-300 backdrop-blur-sm">
-              Become a Provider
-            </button>
+            <Link href={'/support'}>
+              <button className="group border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-foreground transition-all duration-300 backdrop-blur-sm">
+                Become a Provider
+              </button>
+            </Link>
           </div>
         </div>
       </div>

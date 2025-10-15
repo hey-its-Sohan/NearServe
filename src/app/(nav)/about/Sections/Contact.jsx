@@ -1,3 +1,5 @@
+"use-client"
+import Link from 'next/link'
 import React from 'react'
 
 function Contact() {
@@ -21,9 +23,11 @@ function Contact() {
         </div>
 
         <div className='w-full '>
-          <button className="primary-btn w-full mt-6   ">
-            Contact Support
-          </button>
+          <Link href={'/support'}>
+            <button className="primary-btn w-full mt-6   ">
+              Contact Support
+            </button>
+          </Link>
         </div>
 
       </div>
